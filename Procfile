@@ -1,1 +1,1 @@
-postdeploy: /bin/postdeploy.sh
+postdeploy: bundle exec rake db:migrate
