@@ -31,6 +31,8 @@ class IssuesController < ApplicationController
     if @issue.update(issue_params)
       redirect_to project_issues_path(@project), notice: "Issue was successfully updated."
     else
+      @comments = @issue.comments.order(created_at: :asc)
+      @new_comment = @issue.comments.new
       render :edit, status: :unprocessable_entity
     end
   end
