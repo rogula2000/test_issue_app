@@ -1,0 +1,67 @@
+<div class="border border-blue-900 rounded p-6">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-semibold">Edit issue</h1>
+  </div>
+  <div class="flex mb-6">
+    <div class="flex-1"></div>
+    <%= link_to "Cancel", project_issues_path(@project), class: "py-2.5 px-6 text-sm font-semibold text-indigo-500 transition-all duration-500 hover:text-indigo-700 w-30" %>
+    <div class="w-30">
+      <%= button_to "Delete", project_issue_path(@project, @issue), method: :delete, form: { data: { turbo_confirm: "Delete this issue?" } }, class: "block px-6 py-2 w-full cursor-pointer text-left text-red-500" %>
+    </div>
+  </div>
+  <%= form_with model: [@project, @issue] do |f| %>
+    <div class="mb-4 flex gap-2">
+      <label class="block mb-1 flex-1">Issue No: <%= @issue.id %></label>
+      <label class="block mb-1 flex-1">Creation Date: <%= @issue.created_at.to_date %></label>
+    </div>
+    <div class="mb-4">
+      <%= f.label :title, class: "block mb-1" %>
+      <%= f.text_field :title, class: "border rounded px-3 py-2 w-full" %>
+    </div>
+
+    <div class="mb-4">
+      <%= f.label :description, class: "block mb-1" %>
+      <%= f.text_area :description, rows: 5, class: "border rounded px-3 py-2 w-full" %>
+    </div>
+
+    <div class="mb-4">
+      <%= f.label :assignee_name, "Assigned to", class: "block mb-1" %>
+      <%= f.text_field :assignee_name, class: "border rounded px-3 py-2 w-full" %>
+    </div>
+
+    <div class="mb-4">
+      <%= f.label :status, class: "block mb-1" %>
+      <%= f.select :status, Issue.statuses.keys.map { |s| [s.humanize, s] }, {}, class: "border rounded px-3 py-2 w-full" %>
+    </div>
+
+    <div class="flex gap-2">
+      <%= f.submit class: "py-2.5 px-6 text-sm bg-indigo-500 text-white rounded-lg cursor-pointer font-semibold text-center shadow-xs transition-all duration-500 hover:bg-indigo-700" %>
+      <%= link_to "Cancel", project_issues_path(@project), class: "py-2.5 px-6 text-sm font-semibold text-indigo-500 transition-all duration-500 hover:text-indigo-700" %>
+    </div>
+  <% end %>
+  <div class="mt-8">
+    <h2 class="text-xl font-semibold mb-2">Comments</h2>
+    <div class="space-y-3">
+      <% @comments.each do |comment| %>
+        <div class="flex">
+          <div class="w-42 mt-1"><%= comment.created_at.strftime("%Y-%m-%d %H:%M") %></div>
+          <div class="border rounded px-3 py-2 w-full"><%= simple_format(comment.content) %></div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="mt-4">
+      <%= form_with model: [@project, @issue, @new_comment] do |fc| %>
+        <%= fc.text_area :content, rows: 3, placeholder: "Write new comment here and it will be saved", class: "border rounded px-3 py-2 w-full" %>
+        <% if @new_comment.errors.any? %>
+          <div class="text-red-600 text-sm mt-1"><%= @new_comment.errors.full_messages.to_sentence %></div>
+        <% end %>
+        <div class="mt-2">
+          <%= fc.submit "Add comment", class: "py-2.5 px-6 text-sm bg-indigo-500 text-white rounded-lg cursor-pointer font-semibold text-center shadow-xs transition-all duration-500 hover:bg-indigo-700" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+

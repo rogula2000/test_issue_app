@@ -1,0 +1,36 @@
+<div class="border border-blue-900 rounded p-6">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-semibold">Projects</h1>
+    <%= link_to "+ Create new project", new_project_path, class: "py-2.5 px-6 text-sm bg-indigo-500 text-white rounded-lg cursor-pointer font-semibold text-center shadow-xs transition-all duration-500 hover:bg-indigo-700" %>
+  </div>
+
+  <div class="space-y-4">
+    <% @projects.each do |project| %>
+      <div class="flex items-center justify-between border-b pb-3">
+        <div class="text-lg"><%= link_to project.name, project_issues_path(project), class: "text-indigo-600 hover:text-indigo-800" %></div>
+        <div class="relative">
+          <div class="flex gap-3">
+            <div class="dropdown relative inline-flex pb-2" data-controller="dropdown">
+              <button type="button" class="dropdown-toggle inline-flex justify-center items-center gap-2 py-3 px-6 text-sm rounded-full cursor-pointer font-semibold text-center shadow-xs" data-action="click->dropdown#toggle" aria-haspopup="true" aria-expanded="false">
+                ...
+              </button>
+              <div id="dropdown-default-<%= project.id %>" class="dropdown-menu rounded-xl shadow-lg bg-white absolute top-full w-42 mt-2 hidden z-50" aria-labelledby="dropdown-default-<%= project.id %>" data-dropdown-target="menu">
+                <ul class="py-2">
+                  <li>
+                    <%= link_to "Edit", edit_project_path(project), class: "block px-6 py-2 rounded-xl font-medium transition-all duration-500 hover:bg-indigo-700 hover:text-white" %>
+                  </li>
+                  <li>
+                    <div class="block rounded-xl font-medium text-red-500 transition-all duration-500 hover:bg-red-700 hover:text-white">
+                      <%= button_to "Delete", project_path(project), method: :delete, form: { data: { turbo_confirm: "Delete this project?" } }, class: "block px-6 py-2 w-full cursor-pointer text-left" %>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+

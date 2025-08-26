@@ -1,0 +1,55 @@
+<div class="border border-blue-900 rounded p-6">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-semibold"><%= @project.name %></h1>
+    <%= link_to "+ Create a new issue", new_project_issue_path(@project), class: "py-2.5 px-6 text-sm bg-indigo-500 text-white rounded-lg cursor-pointer font-semibold text-center shadow-xs transition-all duration-500 hover:bg-indigo-700" %>
+  </div>
+
+  <div class="overflow-visible">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">No</th>
+          <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Title</th>
+          <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Date created</th>
+          <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Assigned to</th>
+          <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Status</th>
+          <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Action</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        <% @issues.each_with_index do |issue, index| %>
+          <tr>
+            <td class="px-4 py-2 text-sm"><%= index + 1 %></td>
+            <td class="px-4 py-2 text-sm">
+              <%= link_to issue.title, edit_project_issue_path(@project, issue), class: "block px-6 py-2 rounded-xl font-medium" %>
+            </td>
+            <td class="px-4 py-2 text-sm whitespace-nowrap"><%= issue.created_at.to_date %></td>
+            <td class="px-4 py-2 text-sm"><%= issue.assignee_name.presence || "-" %></td>
+            <td class="px-4 py-2 text-sm capitalize"><%= issue.status.humanize %></td>
+            <td class="px-4 py-2 text-sm">
+              <div class="dropdown relative inline-flex" data-controller="dropdown">
+                <button type="button" class="dropdown-toggle inline-flex justify-center items-center gap-2 py-2 px-4 text-sm rounded-full cursor-pointer font-semibold text-center shadow-xs" data-action="click->dropdown#toggle" aria-haspopup="true" aria-expanded="false">
+                  ...
+                </button>
+                <div id="dropdown-issue-<%= issue.id %>" class="dropdown-menu rounded-xl shadow-lg bg-white absolute top-full w-42 mt-2 hidden z-50" aria-labelledby="dropdown-issue-<%= issue.id %>" data-dropdown-target="menu">
+                  <ul class="py-2">
+                    <li>
+                      <%= link_to "Edit", edit_project_issue_path(@project, issue), class: "block px-6 py-2 rounded-xl font-medium transition-all duration-500 hover:bg-indigo-700 hover:text-white" %>
+                    </li>
+                    <li>
+                      <div class="block rounded-xl font-medium text-red-500 transition-all duration-500 hover:bg-red-700 hover:text-white">
+                        <%= button_to "Delete", project_issue_path(@project, issue), method: :delete, form: { data: { turbo_confirm: "Delete this issue?" } }, class: "block px-6 py-2 w-full cursor-pointer text-left" %>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
